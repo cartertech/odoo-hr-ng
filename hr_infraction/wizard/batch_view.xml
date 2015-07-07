@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="view_batch_infraction" model="ir.ui.view">
+            <field name="name">Batch Infraction Creation</field>
+            <field name="model">hr.infraction.batch</field>
+            <field name="arch" type="xml">
+                <form string="Batch Infraction" version="7.0">
+                    <header>
+                        <button icon="gtk-execute" string="Generate" name="create_infractions" type="object" class="oe_highlight" />
+                    </header>
+                    <group>
+                        <label colspan="4" nolabel="1" string="This wizard will generate infractions for selected employees." />
+                    </group>
+                    <group>
+                        <group>
+                            <field name="category_id" widget="selection" on_change="onchange_category(category_id)" />
+                            <field name="date" />
+                        </group>
+                        <group>
+                            <field name="name" />
+                        </group>
+                    </group>
+                    <group string="Memo">
+                        <field name="memo" nolabel="1" placeholder="Describe the incident here..." />
+                    </group>
+                    <group colspan="4" >
+                        <separator string="Employees" />
+                        <newline/>
+                        <field name="employee_ids" nolabel="1"/>
+                    </group>
+               </form>
+            </field>
+        </record>
+
+        <record id="action_batch_infraction" model="ir.actions.act_window">
+            <field name="name">Generate Infractions</field>
+            <field name="res_model">hr.infraction.batch</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_batch_infraction"/>
+            <field name="target">new</field>
+        </record>
+        <menuitem action="action_batch_infraction"
+            id="menu_batch_infraction"
+            parent="menu_hr_infraction_root"
+            sequence="6"/>
+
+    </data>
+</openerp>

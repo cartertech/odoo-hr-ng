@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<openerp>
+    <data noupdate="0">
+        
+        <!-- OverTime -->
+        
+        <record id="group_ot_schedule" model="res.groups">
+            <field name="name">Schedule OT</field>
+            <field name="category_id" ref="base.module_category_human_resources"/>
+            <field name="users" eval="[(4, ref('base.user_root'))]"/>
+            <field name="comment">the user will be able to create OT schedules for subordinates</field>
+        </record>
+        
+        <record id="group_ot_approve" model="res.groups">
+            <field name="name">Approve OT</field>
+            <field name="category_id" ref="base.module_category_human_resources"/>
+            <field name="users" eval="[(4, ref('base.user_root'))]"/>
+            <field name="comment">the user will have final approval of OT schedules for subordinates</field>
+        </record>
+        
+        <record id="group_ot_clerk" model="res.groups">
+            <field name="name">OT Data Entry Clerk</field>
+            <field name="category_id" ref="base.module_category_human_resources"/>
+            <field name="users" eval="[(4, ref('base.user_root'))]"/>
+            <field name="implied_ids" eval="[(4, ref('hr_schedule.group_ot_schedule'))]"/>
+            <field name="comment">the user will be able to create OT schedules for anyone</field>
+        </record>
+        
+    </data>    
+</openerp>

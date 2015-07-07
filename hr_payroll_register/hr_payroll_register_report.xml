@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<openerp>
+	<data>
+        
+        <report 
+            auto="False"
+            header="False" 
+            id="payroll_summary_report" 
+            model="hr.payroll.register" 
+            name="hr.payroll.register.summary" 
+            rml="hr_payroll_register/report/payroll_summary.rml"
+            menu = "True" 
+            string="Payroll Summary" />
+  
+	</data>
+</openerp>

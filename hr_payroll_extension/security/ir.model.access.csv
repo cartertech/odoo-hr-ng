@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_hr_payslip_accrual,access_hr_payslip_accrual,model_hr_payslip_accrual,base.group_hr_user,1,0,0,0
+access_hr_payslip_accrual_payrm,access_hr_payslip_accrual,model_hr_payslip_accrual,hr_security.group_payroll_manager,1,0,0,0

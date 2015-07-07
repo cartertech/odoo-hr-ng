@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="view_hr_config_contract_state" model="ir.ui.view">
+            <field name="name">hr settings for contract state</field>
+            <field name="model">hr.config.settings</field>
+            <field name="inherit_id" ref="hr.view_human_resources_configuration"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='hr_payroll']" position="before">
+                    <div>
+                        <field name="default_concurrent_contracts" class="oe_inline"/>
+                        <label for="default_concurrent_contracts"/>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</openerp>

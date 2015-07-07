@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="view_schedule_ot_by_employees" model="ir.ui.view">
+            <field name="name">Schedule Over Time by employees</field>
+            <field name="model">hr.schedule.ot.employees</field>
+            <field name="arch" type="xml">
+                <form string="Schedule Over Time by Employees" version="7.0">
+                    <header>
+                        <button icon="gtk-execute" string="Generate" name="create_ot" type="object" class="oe_highlight"  />
+                    </header>
+                    <group>
+                        <label colspan="4" nolabel="1" string="This wizard will generate Over Time schedules for selected employees based on the date specified in the batch form." />
+                    </group>
+                    <group colspan="4" >
+                        <separator string="Employees" colspan="4"/>
+                        <newline/>
+                        <field name="employee_ids" nolabel="1"/>
+                    </group>
+               </form>
+            </field>
+        </record>
+
+        <record id="action_schedule_ot_by_employees" model="ir.actions.act_window">
+            <field name="name">Generate Scheduled OT</field>
+            <field name="res_model">hr.schedule.ot.employees</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_schedule_ot_by_employees"/>
+            <field name="target">new</field>
+        </record>
+
+    </data>
+</openerp>

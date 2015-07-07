@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        
+        <record id="view_salary_rule_form" model="ir.ui.view">
+            <field name="name">hr.salary.rule.form.inherit</field>
+            <field name="model">hr.salary.rule</field>
+            <field name="inherit_id" ref="hr_payroll.hr_salary_rule_form"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//field[@name='quantity']" position="replace">
+                        <field name="quantity" attrs="{'required':[('amount_select','!=','code')]}"/><newline/>
+                    </xpath>
+                    <xpath expr="//field[@name='appears_on_payslip']" position="after">
+                        <field name="has_accrual"/>
+                        <field name="accrual_policy_line_id"/>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+
+        <record id="view_hr_payslip_form" model="ir.ui.view">
+            <field name="name">hr.payslip.form</field>
+            <field name="model">hr.payslip</field>
+            <field name="inherit_id" ref="hr_payroll.view_hr_payslip_form"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//field[@name='input_line_ids']" position="after">
+                        <group string="Accruals">
+                            <field name="payslip_accrual_ids" nolabel="1" readonly="1">
+                                <tree string="Accruals">
+                                    <field name="employee_id"/>
+                                    <field name="accrual_policy_line_id"/>
+                                    <field name="amount"/>
+                                </tree>
+                            </field>
+                        </group>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+        
+        <record id="view_payslip_accrual_tree" model="ir.ui.view">
+            <field name="name">hr.payslip.accrual.tree</field>
+            <field name="model">hr.payslip.accrual</field>
+            <field name="arch" type="xml">
+                <tree string="Payslip Based Accruals">
+                    <field name="employee_id"/>
+                    <field name="accrual_policy_line_id"/>
+                    <field name="amount"/>
+                </tree>
+            </field>
+        </record>
+    
+    </data>
+</openerp>

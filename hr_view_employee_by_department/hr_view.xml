@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+
+        <record id="view_employee_tree" model="ir.ui.view">
+            <field name="name">hr.employee.list_by_department.tree</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='name']" position="before">
+                    <field name="image_small"/>
+                </xpath>
+                <xpath expr="//field[@name='work_phone']" position="replace">
+                    <field name="work_phone" invisible="1"/>
+                </xpath>
+                <xpath expr="//field[@name='work_email']" position="replace">
+                    <field name="work_email" invisible="1"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_employee_filter" model="ir.ui.view">
+            <field name="name">Employees List View by Department</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr="//filter[@string='Department']" position="replace">
+                    <filter name="group_department" string="Department" icon="terp-personal+" domain="[]" context="{'group_by':'department_id'}"/>
+                </xpath>
+            </field>
+        </record>
+        
+        <record id="hr.open_view_employee_list_my" model="ir.actions.act_window">
+            <field name="name">Employees</field>
+            <field name="view_mode">tree,form,kanban</field>
+            <field name="context">{'search_default_group_department':1}</field>
+        </record>
+        
+    </data>
+</openerp>

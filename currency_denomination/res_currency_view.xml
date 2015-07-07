@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        
+        <record id="view_currency_form" model="ir.ui.view">
+            <field name="name">res.currency.form.denomination</field>
+            <field name="model">res.currency</field>
+            <field name="inherit_id" ref="base.view_currency_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='rate_ids']" position="before">
+                    <group string="Denominations">
+                        <field name="denomination_ids" nolabel="1">
+                            <tree string="Currency Denominations" editable="bottom">
+                                <field name="value"/>
+                                <field name="ratio"/>
+                            </tree>
+                        </field>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+        
+    </data>
+</openerp>

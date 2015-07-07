@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+        
+        <!-- Decimal Precision for intermediate payroll values -->
+        <record forcecreate="True" id="decimal_intermediate_payroll" model="decimal.precision">
+            <field name="name">Intermediate Payroll</field>
+            <field name="digits">6</field>
+        </record>
+
+        <!-- Additional Payslip Exceptions -->
+        
+        <record id="payslip_exception_net_salary_over" model="hr.payslip.exception.rule">
+            <field name="name">Net Salary exceeds previous payslip</field>
+            <field name="code">NETOVER</field>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = utils.PREVPS.exists and (categories.NET.amount > (utils.PREVPS.net + (utils.PREVPS.net * 0.20)))</field>
+            <field name="sequence" eval="30"/>
+            <field name="severity">high</field>
+        </record>
+        
+        <record id="payslip_exception_net_salary_under" model="hr.payslip.exception.rule">
+            <field name="name">Net Salary less than previous payslip</field>
+            <field name="code">NETUNDER</field>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = utils.PREVPS.exists and (categories.NET.amount &lt; (utils.PREVPS.net - (utils.PREVPS.net * 0.20)))</field>
+            <field name="sequence" eval="30"/>
+            <field name="severity">high</field>
+        </record>
+        
+    </data>
+</openerp>

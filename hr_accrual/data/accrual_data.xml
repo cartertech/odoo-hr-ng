@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        
+        <!-- Decimal Precision for accrual values -->
+        <record forcecreate="True" id="decimal_accrual" model="decimal.precision">
+            <field name="name">Accruals</field>
+            <field name="digits">3</field>
+        </record>
+    
+    </data>
+</openerp>

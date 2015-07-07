@@ -1,0 +1,87 @@
+--- ../vendor/src/openobject-addons/7.0/hr_payroll/hr_payroll.py	2014-01-19 09:36:46.463942000 +0300
++++ openobject-addons/hr_payroll/hr_payroll.py	2014-03-04 14:25:47.452065080 +0300
+@@ -379,23 +379,22 @@
+         @param date_to: date field
+         @return: returns the ids of all the contracts for the given employee that need to be considered for the given dates
+         """
+-        contract_obj = self.pool.get('hr.contract')
+-        clause = []
+-        #a contract is valid if it ends between the given dates
+-        clause_1 = ['&',('date_end', '<=', date_to),('date_end','>=', date_from)]
+-        #OR if it starts between the given dates
+-        clause_2 = ['&',('date_start', '<=', date_to),('date_start','>=', date_from)]
+-        #OR if it starts before the date_from and finish after the date_end (or never finish)
+-        clause_3 = [('date_start','<=', date_from),'|',('date_end', '=', False),('date_end','>=', date_to)]
+-        clause_final =  [('employee_id', '=', employee.id),'|','|'] + clause_1 + clause_2 + clause_3
+-        contract_ids = contract_obj.search(cr, uid, clause_final, context=context)
++        # A contract is valid if it starts before the date_to and finishes after the date_from (or never finish)
++        contract_ids = self.pool.get('hr.contract').search(cr, uid,
++                                                           [
++                                                            ('employee_id', '=', employee.id),
++                                                            ('date_start','<=', date_to),
++                                                            '|',
++                                                                 ('date_end', '=', False),
++                                                                 ('date_end','>=', date_from),
++                                                           ], context=context)
+         return contract_ids
+ 
+     def compute_sheet(self, cr, uid, ids, context=None):
+         slip_line_pool = self.pool.get('hr.payslip.line')
+         sequence_obj = self.pool.get('ir.sequence')
+         for payslip in self.browse(cr, uid, ids, context=context):
+-            number = payslip.number or sequence_obj.get(cr, uid, 'salary.slip')
++            number = payslip.number or sequence_obj.next_by_code(cr, uid, 'salary.slip', context=context)
+             #delete old payslip lines
+             old_slipline_ids = slip_line_pool.search(cr, uid, [('slip_id', '=', payslip.id)], context=context)
+ #            old_slipline_ids
+@@ -493,7 +492,10 @@
+         def _sum_salary_rule_category(localdict, category, amount):
+             if category.parent_id:
+                 localdict = _sum_salary_rule_category(localdict, category.parent_id, amount)
+-            localdict['categories'].dict[category.code] = category.code in localdict['categories'].dict and localdict['categories'].dict[category.code] + amount or amount
++            if category.code in localdict['categories'].dict:
++                localdict['categories'].dict[category.code] = localdict['categories'].dict[category.code] + amount
++            else:
++                localdict['categories'].dict[category.code] = amount
+             return localdict
+ 
+         class BrowsableObject(object):
+@@ -689,16 +691,19 @@
+ 
+         if not contract_ids:
+             return res
+-        contract_record = contract_obj.browse(cr, uid, contract_ids[0], context=context)
+-        res['value'].update({
+-                    'contract_id': contract_record and contract_record.id or False
+-        })
+-        struct_record = contract_record and contract_record.struct_id or False
+-        if not struct_record:
+-            return res
+-        res['value'].update({
+-                    'struct_id': struct_record.id,
+-        })
++
++        if len(contract_ids) == 1:
++            contract_record = contract_obj.browse(cr, uid, contract_ids[0], context=context)
++            res['value'].update({
++                        'contract_id': contract_record and contract_record.id or False
++            })
++            struct_record = contract_record and contract_record.struct_id or False
++            if not struct_record:
++                return res
++            res['value'].update({
++                        'struct_id': struct_record.id,
++            })
++
+         #computation of the salary input
+         worked_days_line_ids = self.get_worked_day_lines(cr, uid, contract_ids, date_from, date_to, context=context)
+         input_line_ids = self.get_inputs(cr, uid, contract_ids, date_from, date_to, context=context)
+@@ -878,7 +883,7 @@
+         else:
+             try:
+                 eval(rule.amount_python_compute, localdict, mode='exec', nocopy=True)
+-                return localdict['result'], 'result_qty' in localdict and localdict['result_qty'] or 1.0, 'result_rate' in localdict and localdict['result_rate'] or 100.0
++                return localdict['result'], eval(rule.quantity, localdict), 'result_rate' in localdict and localdict['result_rate'] or 100.0
+             except:
+                 raise osv.except_osv(_('Error!'), _('Wrong python code defined for salary rule %s (%s).')% (rule.name, rule.code))
+ 
